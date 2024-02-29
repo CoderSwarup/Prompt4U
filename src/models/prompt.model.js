@@ -4,7 +4,7 @@ const PromptSchema = new mongoose.Schema(
   {
     creator: {
       type: mongoose.Schema.ObjectId,
-      ref: "User-",
+      ref: "User",
     },
     prompt: {
       type: String,

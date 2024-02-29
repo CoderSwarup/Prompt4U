@@ -12,7 +12,6 @@ function Navbar() {
   useEffect(() => {
     const setProvider = async () => {
       const res = await getProviders();
-      console.log(res);
       setProviders(res);
       //   console.log(res);
     };
