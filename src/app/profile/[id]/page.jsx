@@ -2,13 +2,17 @@
 
 import Profile from "@components/Profile";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { notFound, useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function page() {
+  const { id } = useParams();
+
   const { data: session } = useSession();
   const router = useRouter();
   const [posts, setPosts] = useState([]);
+  const user = useState({});
+
   const handleEdit = (post) => {
     router.push(`/update-prompt?id=${post._id}`);
   };
@@ -25,27 +29,36 @@ export default function page() {
           setPosts(filteredPost);
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await fetch(`api/users/${session?.user.id}/posts`);
+      const res = await fetch(`/api/users/${id}/posts`);
       const data = await res.json();
       setPosts(data.prompts);
       // console.log(data);
       // console.log(res);
     };
 
-    if (session?.user.id) {
+    if (id.length === 24) {
       fetchPost();
     }
-  }, [session?.user.id]);
+  }, [id]);
+
+  if (id.length !== 24) {
+    return notFound();
+  }
+
   return (
     <Profile
-      name="My"
-      desc="Welcome To Your presonalized profile Page"
+      name={session?.user.id === id ? "My" : posts[0]?.creator?.username}
+      desc={`Welcome To ${
+        session?.user.id === id
+          ? "Your"
+          : `${posts[0]?.creator?.username || "User"}`
+      } presonalized profile Page`}
       data={posts}
       handleEdit={handleEdit}
       handleDelete={handleDelete}

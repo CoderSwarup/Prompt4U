@@ -3,9 +3,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useRouter } from "next/navigation";
 function Navbar() {
   const isUserLoggedIn = true;
   const { data: session } = useSession();
+  const router = useRouter();
   // console.log(session);
   const [providers, setProviders] = useState(null);
   const [toggleDropDown, setToggleDropDown] = useState(false);
@@ -38,11 +40,18 @@ function Navbar() {
               Create Post
             </Link>
 
-            <button type="button" onClick={signOut} className="outline_btn">
+            <button
+              type="button"
+              onClick={() => {
+                signOut();
+                router.push("/");
+              }}
+              className="outline_btn"
+            >
               Sign Out
             </button>
 
-            <Link href={"/profile"}>
+            <Link href={`/profile/${session?.user?.id}`}>
               <Image
                 width={30}
                 height={30}
@@ -87,7 +96,7 @@ function Navbar() {
             {toggleDropDown && (
               <div className="dropdown">
                 <Link
-                  href={"/profile"}
+                  href={`"/profile/${session?.user?.id}`}
                   className="dropdown_list"
                   onClick={() => setToggleDropDown(false)}
                 >
@@ -106,8 +115,8 @@ function Navbar() {
                 <button
                   type="button"
                   onClick={() => {
-                    setToggleDropDown(false);
                     signOut();
+                    router.push("/", { scroll: false });
                   }}
                   className="mt-5 w-full black_btn"
                 >

@@ -3,10 +3,12 @@ import React, { useState } from "react";
 import Form from "@components/Form";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { data } from "autoprefixer";
 export default function page() {
   const router = useRouter();
   const { data: session } = useSession();
   const [submiting, setSubmiting] = useState(false);
+
   const [post, setPost] = useState({
     prompt: "",
     tag: "",
@@ -28,20 +30,25 @@ export default function page() {
         router.push("/");
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setSubmiting(false);
     }
   };
-  return (
-    <>
-      <Form
-        type="create"
-        post={post}
-        setPost={setPost}
-        submiting={submiting}
-        handleSubmitPost={handleSubmitPost}
-      />
-    </>
-  );
+
+  if (session?.user) {
+    return (
+      <>
+        <Form
+          type="create"
+          post={post}
+          setPost={setPost}
+          submiting={submiting}
+          handleSubmitPost={handleSubmitPost}
+        />
+      </>
+    );
+  } else {
+    return router.push("/", { scroll: false });
+  }
 }

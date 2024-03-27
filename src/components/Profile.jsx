@@ -15,18 +15,24 @@ export default function Profile({
 
       <p className="my-10">{desc}</p>
 
-      <section className="mt-10 feed">
-        {data.map((post, i) => {
-          return (
-            <PromptCard
-              key={i}
-              post={post}
-              handleEdit={() => handleEdit && handleEdit(post)}
-              handleDelete={() => handleDelete && handleDelete(post)}
-            />
-          );
-        })}
-      </section>
+      {data.length !== 0 ? (
+        <section className="mt-10 feed">
+          {data.map((post, i) => {
+            return (
+              <PromptCard
+                key={i}
+                post={post}
+                handleEdit={() => handleEdit && handleEdit(post)}
+                handleDelete={() => handleDelete && handleDelete(post)}
+              />
+            );
+          })}
+        </section>
+      ) : (
+        <h1 className="text-center text-4xl bold text-upper">
+          Not Prompt Found Please Create a Prompts !!
+        </h1>
+      )}
     </section>
   );
 }
